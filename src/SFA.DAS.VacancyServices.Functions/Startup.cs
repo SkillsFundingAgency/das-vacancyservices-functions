@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using SFA.DAS.VacancyServices.Functions;
+using SFA.DAS.VacancyServices.Functions.Infrastructure;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 
@@ -30,7 +31,8 @@ namespace SFA.DAS.VacancyServices.Functions
                 });
 
                 nLogConfiguration.ConfigureNLog(configuration);
-            });
+            })
+            .AddTransient<StorageQueueService>();
 
             var config = new ConfigurationBuilder()
                 .AddConfiguration(configuration)
