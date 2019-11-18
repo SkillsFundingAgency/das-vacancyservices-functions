@@ -55,7 +55,7 @@
         "storageAccountName": "[toLower(concat('das', parameters('environmentName'), parameters('serviceName'), 'str'))]"
     },
     "resources": [
-                {
+        {
             "apiVersion": "2017-05-10",
             "name": "storage-account",
             "type": "Microsoft.Resources/deployments",
