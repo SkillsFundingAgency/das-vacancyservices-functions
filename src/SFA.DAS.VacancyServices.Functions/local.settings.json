@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "ConnectionStrings": {
+    "RecruitV1StorageConnectionString": "UseDevelopmentStorage=true"
+  },
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AppName": "das-vacancyservices-functions",
+    "EnvironmentName":  "LOCAL",
+    "VacancyIndexSchedule": "0 */1 * * * *"
+  }
+}

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 
@@ -7,21 +8,24 @@ namespace SFA.DAS.VacancyServices.Functions.Infrastructure
 {
     public class StorageQueueService
     {
-        const string RecruitV1StorageConnectionStringKey = "RecruitV1StorageConnectionString"; 
-        private readonly CloudQueueClient _queueClient;
-        public StorageQueueService(IConfiguration config)
+        private readonly IConfiguration _config;
+        private readonly ILogger<StorageQueueService> _logger;
+        public StorageQueueService(IConfiguration config, ILogger<StorageQueueService> logger)
         {
-            var recruitV1StorageConnectionString = config.GetConnectionStringOrSetting(RecruitV1StorageConnectionStringKey);
-            var storageAccount = CloudStorageAccount.Parse(recruitV1StorageConnectionString);
-	        _queueClient = storageAccount.CreateCloudQueueClient();
+            _config = config;
+            _logger = logger;
         }
 
-        public async Task SendMessageAsync(string queueName)
+        public async Task AddMessageAsync(string storageConnectionStringKey, string queueName, string message)
         {
-            var queue = _queueClient.GetQueueReference(queueName);
+            _logger.LogInformation($"Queuing up message on {queueName}");
+            var connectionString = _config.GetConnectionStringOrSetting(storageConnectionStringKey);
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+	        var queueClient = storageAccount.CreateCloudQueueClient();
+            var queue = queueClient.GetQueueReference(queueName);
             var qe = await queue.ExistsAsync();
-            var msg = AzureQueueStorageMessageHelper.GetSerialisedQueueMessage(queueName);
-            await queue.AddMessageAsync(msg);
+            var cloudMessage = new CloudQueueMessage(message);
+            await queue.AddMessageAsync(cloudMessage);
         }
     }
 }
