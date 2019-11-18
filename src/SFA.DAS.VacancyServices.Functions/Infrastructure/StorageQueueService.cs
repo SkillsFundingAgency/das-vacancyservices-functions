@@ -21,7 +21,7 @@ namespace SFA.DAS.VacancyServices.Functions.Infrastructure
             _logger.LogInformation($"Queuing up message on {queueName}");
             var connectionString = _config.GetConnectionStringOrSetting(storageConnectionStringKey);
             var storageAccount = CloudStorageAccount.Parse(connectionString);
-	        var queueClient = storageAccount.CreateCloudQueueClient();
+            var queueClient = storageAccount.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference(queueName);
             var qe = await queue.ExistsAsync();
             var cloudMessage = new CloudQueueMessage(message);
