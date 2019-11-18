@@ -8,22 +8,18 @@ namespace SFA.DAS.VacancyServices.Functions.SchedulerFunctions
 {
     public class VacancyIndexScheduler : SchedulerBase
     {
-        public override string QueueName => SchedulerFunctionConstants.QueueNames.VacancyIndexSchedulerQueueName;
-        private readonly StorageQueueService _service;
         public VacancyIndexScheduler(StorageQueueService service)
+        : base(SchedulerFunctionConstants.QueueNames.VacancyIndexSchedulerQueueName, service)
         {
-            _service = service;
         }
 
-        [FunctionName("vacancy-index-scheduler")]
+        [FunctionName(nameof(VacancyIndexScheduler))]
         public async Task Run(
             [TimerTrigger("%VacancyIndexSchedule%")]TimerInfo myTimer, 
             ILogger log)
         {
             log.LogInformation($"{nameof(VacancyIndexScheduler)} triggered at {DateTime.Now}");
-            var message = GetSchedulerMessage();
-            await _service.AddMessageAsync(
-                SchedulerFunctionConstants.RecruitV1StorageConnectionStringKey, QueueName, message);
+            await AddMessageToQueueAsync();
         }
     }
 }
