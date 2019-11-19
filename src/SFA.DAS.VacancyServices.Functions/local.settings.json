@@ -1,0 +1,21 @@
+{
+  "IsEncrypted": false,
+  "ConnectionStrings": {
+    "RecruitV1StorageConnectionString": "UseDevelopmentStorage=true"
+  },
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AppName": "das-vacancyservices-functions",
+    "EnvironmentName":  "LOCAL",
+    "VacancyIndexSchedule": "0 30 * * * *",
+    "GeoCodeSchedule": "0 0 * * * *",
+    "MonitorSchedule": "0 0 * * * *",
+    "VacancyStatusProcessorSchedule": "0 0 * * * *",
+    "DailyMetricsSchedule": "0 0 1 * * *",
+    "ReferenceDataSchedule": "0 0 5 * * *",
+    "HouseKeepingSchedule": "0 0 6 * * *",
+    "SavedSearchSchedule": "0 0 8 * * *",
+    "DailyDigestSchedule": "0 0 10 * * *"
+  }
+}
