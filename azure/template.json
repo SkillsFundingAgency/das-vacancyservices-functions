@@ -45,6 +45,33 @@
                 "description": "Number of the app service plan instance"
             },
             "defaultValue": 2
+        },
+        "VacancyIndexSchedule": {
+            "type": "string"
+        },
+        "GeoCodeSchedule": {
+            "type": "string"
+        },
+        "MonitorSchedule": {
+            "type": "string"
+        },
+        "VacancyStatusProcessorSchedule": {
+            "type": "string"
+        },
+        "DailyMetricsSchedule": {
+            "type": "string"
+        },
+        "ReferenceDataSchedule": {
+            "type": "string"
+        },
+        "HouseKeepingSchedule": {
+            "type": "string"
+        },
+        "SavedSearchSchedule": {
+            "type": "string"
+        },
+        "DailyDigestSchedule": {
+            "type": "string"
         }
     },
     "variables": {
@@ -171,6 +198,42 @@
                             {
                                 "name": "AppName",
                                 "value": "das-vacancyservices-functions"
+                            },
+                             {
+                                "name": "VacancyIndexSchedule",
+                                "value": "[parameters('VacancyIndexSchedule')]"
+                            },
+                             {
+                                "name": "GeoCodeSchedule",
+                                "value": "[parameters('GeoCodeSchedule')]"
+                            },
+                             {
+                                "name": "MonitorSchedule",
+                                "value": "[parameters('MonitorSchedule')]"
+                            },
+                             {
+                                "name": "VacancyStatusProcessorSchedule",
+                                "value": "[parameters('VacancyStatusProcessorSchedule')]"
+                            },
+                             {
+                                "name": "DailyMetricsSchedule",
+                                "value": "[parameters('DailyMetricsSchedule')]"
+                            },
+                             {
+                                "name": "ReferenceDataSchedule",
+                                "value": "[parameters('ReferenceDataSchedule')]"
+                            },
+                             {
+                                "name": "HouseKeepingSchedule",
+                                "value": "[parameters('HouseKeepingSchedule')]"
+                            },
+                             {
+                                "name": "SavedSearchSchedule",
+                                "value": "[parameters('SavedSearchSchedule')]"
+                            },
+                             {
+                                "name": "DailyDigestSchedule",
+                                "value": "[parameters('DailyDigestSchedule')]"
                             }
                         ]
                     }
