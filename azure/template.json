@@ -19,7 +19,8 @@
             "metadata": {
                 "description": "Allowed IP's"
             },
-            "defaultValue": []
+            "defaultValue": [
+            ]
         },
         "loggingRedisConnectionString": {
             "type": "securestring"
@@ -46,32 +47,35 @@
             },
             "defaultValue": 2
         },
-        "VacancyIndexSchedule": {
+        "vacancyIndexSchedule": {
             "type": "string"
         },
-        "GeoCodeSchedule": {
+        "geoCodeSchedule": {
             "type": "string"
         },
-        "MonitorSchedule": {
+        "monitorSchedule": {
             "type": "string"
         },
-        "VacancyStatusProcessorSchedule": {
+        "vacancyStatusProcessorSchedule": {
             "type": "string"
         },
-        "DailyMetricsSchedule": {
+        "dailyMetricsSchedule": {
             "type": "string"
         },
-        "ReferenceDataSchedule": {
+        "referenceDataSchedule": {
             "type": "string"
         },
-        "HouseKeepingSchedule": {
+        "houseKeepingSchedule": {
             "type": "string"
         },
-        "SavedSearchSchedule": {
+        "savedSearchSchedule": {
             "type": "string"
         },
-        "DailyDigestSchedule": {
+        "dailyDigestSchedule": {
             "type": "string"
+        },
+        "recruitV1StorageConnectionString": {
+            "type": "securestring"
         }
     },
     "variables": {
@@ -199,41 +203,54 @@
                                 "name": "AppName",
                                 "value": "das-vacancyservices-functions"
                             },
-                             {
+                            {
                                 "name": "VacancyIndexSchedule",
-                                "value": "[parameters('VacancyIndexSchedule')]"
+                                "value": "[parameters('vacancyIndexSchedule')]"
                             },
-                             {
+                            {
                                 "name": "GeoCodeSchedule",
-                                "value": "[parameters('GeoCodeSchedule')]"
+                                "value": "[parameters('geoCodeSchedule')]"
                             },
-                             {
+                            {
                                 "name": "MonitorSchedule",
-                                "value": "[parameters('MonitorSchedule')]"
+                                "value": "[parameters('monitorSchedule')]"
                             },
-                             {
+                            {
                                 "name": "VacancyStatusProcessorSchedule",
-                                "value": "[parameters('VacancyStatusProcessorSchedule')]"
+                                "value": "[parameters('vacancyStatusProcessorSchedule')]"
                             },
-                             {
+                            {
                                 "name": "DailyMetricsSchedule",
-                                "value": "[parameters('DailyMetricsSchedule')]"
+                                "value": "[parameters('dailyMetricsSchedule')]"
                             },
-                             {
+                            {
                                 "name": "ReferenceDataSchedule",
-                                "value": "[parameters('ReferenceDataSchedule')]"
+                                "value": "[parameters('referenceDataSchedule')]"
                             },
-                             {
+                            {
                                 "name": "HouseKeepingSchedule",
-                                "value": "[parameters('HouseKeepingSchedule')]"
+                                "value": "[parameters('houseKeepingSchedule')]"
                             },
-                             {
+                            {
                                 "name": "SavedSearchSchedule",
-                                "value": "[parameters('SavedSearchSchedule')]"
+                                "value": "[parameters('savedSearchSchedule')]"
                             },
-                             {
+                            {
                                 "name": "DailyDigestSchedule",
-                                "value": "[parameters('DailyDigestSchedule')]"
+                                "value": "[parameters('dailyDigestSchedule')]"
+                            },
+                            {
+                                "name": "FUNCTIONS_WORKER_RUNTIME",
+                                "value": "dotnet"
+                            }
+                        ]
+                    },
+                    "functionAppConnectionStrings": {
+                        "value": [
+                            {
+                                "name": "RecruitV1StorageConnectionString",
+                                "connectionString": "[parameters('recruitV1StorageConnectionString')]",
+                                "type": "Custom"
                             }
                         ]
                     }
