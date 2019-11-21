@@ -72,6 +72,13 @@
         },
         "DailyDigestSchedule": {
             "type": "string"
+        },
+        "RecruitV1StorageConnectionString": {
+            "type": "securestring"
+        },
+        "FUNCTIONS_WORKER_RUNTIME": {
+            "type": "string",
+            "defaultValue": "dotnet"
         }
     },
     "variables": {
@@ -234,6 +241,19 @@
                              {
                                 "name": "DailyDigestSchedule",
                                 "value": "[parameters('DailyDigestSchedule')]"
+                            },
+                            {
+                                "name": "FUNCTIONS_WORKER_RUNTIME",
+                                "value": "[parameters('FUNCTIONS_WORKER_RUNTIME')]"
+                            }
+                        ]
+                    },
+                        "functionAppConnectionStrings": {
+                        "value": [
+                            {
+                                "name": "RecruitV1StorageConnectionString",
+                                "connectionString": "[parameters('RecruitV1StorageConnectionString')]",
+                                "type": "Custom"
                             }
                         ]
                     }
