@@ -19,7 +19,8 @@
             "metadata": {
                 "description": "Allowed IP's"
             },
-            "defaultValue": []
+            "defaultValue": [
+            ]
         },
         "loggingRedisConnectionString": {
             "type": "securestring"
@@ -206,39 +207,39 @@
                                 "name": "AppName",
                                 "value": "das-vacancyservices-functions"
                             },
-                             {
+                            {
                                 "name": "VacancyIndexSchedule",
                                 "value": "[parameters('VacancyIndexSchedule')]"
                             },
-                             {
+                            {
                                 "name": "GeoCodeSchedule",
                                 "value": "[parameters('GeoCodeSchedule')]"
                             },
-                             {
+                            {
                                 "name": "MonitorSchedule",
                                 "value": "[parameters('MonitorSchedule')]"
                             },
-                             {
+                            {
                                 "name": "VacancyStatusProcessorSchedule",
                                 "value": "[parameters('VacancyStatusProcessorSchedule')]"
                             },
-                             {
+                            {
                                 "name": "DailyMetricsSchedule",
                                 "value": "[parameters('DailyMetricsSchedule')]"
                             },
-                             {
+                            {
                                 "name": "ReferenceDataSchedule",
                                 "value": "[parameters('ReferenceDataSchedule')]"
                             },
-                             {
+                            {
                                 "name": "HouseKeepingSchedule",
                                 "value": "[parameters('HouseKeepingSchedule')]"
                             },
-                             {
+                            {
                                 "name": "SavedSearchSchedule",
                                 "value": "[parameters('SavedSearchSchedule')]"
                             },
-                             {
+                            {
                                 "name": "DailyDigestSchedule",
                                 "value": "[parameters('DailyDigestSchedule')]"
                             },
@@ -248,7 +249,7 @@
                             }
                         ]
                     },
-                        "functionAppConnectionStrings": {
+                    "functionAppConnectionStrings": {
                         "value": [
                             {
                                 "name": "RecruitV1StorageConnectionString",
