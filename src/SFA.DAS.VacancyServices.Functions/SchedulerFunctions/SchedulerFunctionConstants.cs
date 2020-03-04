@@ -15,6 +15,7 @@ namespace SFA.DAS.VacancyServices.Functions.SchedulerFunctions
             public const string SavedSearchSchedulerQueueName = "savedsearchscheduler";
             public const string VacancyIndexSchedulerQueueName = "vacancyindexscheduler";
             public const string VacancyStatusSchedulerQueueName = "vacancystatusscheduler";
+            public const string LegacyDatabaseHousekeepingQueueName = "legacydatabasehousekeeping";
         }
     }
 }
