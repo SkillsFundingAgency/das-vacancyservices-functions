@@ -7,7 +7,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "AppName": "das-vacancyservices-functions",
-    "EnvironmentName":  "LOCAL",
+    "EnvironmentName": "LOCAL",
     "VacancyIndexSchedule": "0 30 * * * *",
     "GeoCodeSchedule": "0 0 * * * *",
     "MonitorSchedule": "0 0 * * * *",
@@ -16,6 +16,7 @@
     "ReferenceDataSchedule": "0 0 5 * * *",
     "HouseKeepingSchedule": "0 0 6 * * *",
     "SavedSearchSchedule": "0 0 8 * * *",
-    "DailyDigestSchedule": "0 0 10 * * *"
+    "DailyDigestSchedule": "0 0 10 * * *",
+    "LegacyDatabaseHousekeepingSchedule": "0 0 3 * * *"
   }
 }
