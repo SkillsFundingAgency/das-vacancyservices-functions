@@ -3,6 +3,8 @@ namespace SFA.DAS.VacancyServices.Functions.SchedulerFunctions
     public static class SchedulerFunctionConstants
     {
         public const string RecruitV1StorageConnectionStringKey = "RecruitV1StorageConnectionString";
+        public const string NasRecruitV1StorageConnectionStringKey = "NasRecruitV1StorageConnectionString";
+
 
         public static class QueueNames
         {
