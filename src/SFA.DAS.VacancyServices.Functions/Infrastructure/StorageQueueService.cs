@@ -20,6 +20,13 @@ namespace SFA.DAS.VacancyServices.Functions.Infrastructure
         {
             _logger.LogInformation($"Queuing up message on {queueName}");
             var connectionString = _config.GetConnectionStringOrSetting(storageConnectionStringKey);
+            
+            if(string.IsNullOrWhiteSpace(connectionString))
+            {
+                _logger.LogWarning($"Connection string key {storageConnectionStringKey} is not available. Not Queueing Message.");
+                return;
+            }
+
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var queueClient = storageAccount.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference(queueName);

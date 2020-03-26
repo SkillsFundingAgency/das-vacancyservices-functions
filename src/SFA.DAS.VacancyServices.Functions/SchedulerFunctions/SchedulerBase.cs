@@ -17,9 +17,13 @@ namespace SFA.DAS.VacancyServices.Functions.SchedulerFunctions
         public Task AddMessageToQueueAsync()
         {
             var message = GetSchedulerMessage();
-            return _service.AddMessageAsync(
+            var task1 = _service.AddMessageAsync(
                 SchedulerFunctionConstants.RecruitV1StorageConnectionStringKey, QueueName, message);
 
+            var task2 = _service.AddMessageAsync(
+                SchedulerFunctionConstants.NasRecruitV1StorageConnectionStringKey, QueueName, message);
+
+            return Task.WhenAll(task1, task2);
         }
         private string GetSchedulerMessage()
         {

@@ -1,7 +1,8 @@
 {
   "IsEncrypted": false,
   "ConnectionStrings": {
-    "RecruitV1StorageConnectionString": "UseDevelopmentStorage=true"
+    "RecruitV1StorageConnectionString": "UseDevelopmentStorage=true",
+    "NasRecruitV1StorageConnectionString":  "UseDevelopmentStorage=true"
   },
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",

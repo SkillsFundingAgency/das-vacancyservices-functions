@@ -85,6 +85,9 @@
         },
         "recruitV1StorageConnectionString": {
             "type": "securestring"
+        },
+		"nasRecruitV1StorageConnectionString": {
+            "type": "securestring"
         }
     },
     "variables": {
@@ -259,6 +262,11 @@
                             {
                                 "name": "RecruitV1StorageConnectionString",
                                 "connectionString": "[parameters('recruitV1StorageConnectionString')]",
+                                "type": "Custom"
+                            },
+							{
+                                "name": "NasRecruitV1StorageConnectionString",
+                                "connectionString": "[parameters('nasRecruitV1StorageConnectionString')]",
                                 "type": "Custom"
                             }
                         ]
