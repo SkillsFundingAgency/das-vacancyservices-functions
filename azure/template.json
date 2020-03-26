@@ -8,6 +8,12 @@
                 "description": "Short name of the environment. Used for the reference of the environment in table storage"
             }
         },
+        "resourceEnvironmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "name of the environment used for naming of resources in azure."
+            }
+        },
         "serviceName": {
             "type": "string",
             "metadata": {
@@ -74,16 +80,19 @@
         "dailyDigestSchedule": {
             "type": "string"
         },
+        "legacyDatabaseHousekeepingSchedule": {
+            "type": "string"
+        },
         "recruitV1StorageConnectionString": {
             "type": "securestring"
         }
     },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
-        "resourceNamePrefix": "[toLower(concat('das-', parameters('environmentName'),'-', parameters('serviceName')))]",
+        "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "appServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
         "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
-        "storageAccountName": "[toLower(concat('das', parameters('environmentName'), parameters('serviceName'), 'str'))]"
+        "storageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'), parameters('serviceName'), 'str'))]"
     },
     "resources": [
         {
@@ -234,6 +243,10 @@
                             {
                                 "name": "DailyDigestSchedule",
                                 "value": "[parameters('dailyDigestSchedule')]"
+                            },
+                            {
+                                "name": "LegacyDatabaseHousekeepingSchedule",
+                                "value": "[parameters('legacyDatabaseHousekeepingSchedule')]"
                             },
                             {
                                 "name": "FUNCTIONS_WORKER_RUNTIME",
