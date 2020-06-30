@@ -10,7 +10,6 @@
     "EnvironmentName": "LOCAL",
     "VacancyIndexSchedule": "0 30 * * * *",
     "GeoCodeSchedule": "0 0 * * * *",
-    "MonitorSchedule": "0 0 * * * *",
     "VacancyStatusProcessorSchedule": "0 0 * * * *",
     "DailyMetricsSchedule": "0 0 1 * * *",
     "ReferenceDataSchedule": "0 0 5 * * *",
