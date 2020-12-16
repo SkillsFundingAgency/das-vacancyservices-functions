@@ -158,6 +158,8 @@
       "apiVersion": "2020-06-01",
       "name": "storage-account",
       "type": "Microsoft.Resources/deployments",
+      "location": "[parameters('resourceGroupLocation')]",
+      "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -175,6 +177,8 @@
       "apiVersion": "2020-06-01",
       "name": "worker-app-service-plan",
       "type": "Microsoft.Resources/deployments",
+      "location": "[parameters('resourceGroupLocation')]",
+      "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -198,6 +202,8 @@
       "apiVersion": "2020-06-01",
       "name": "function-app-insights",
       "type": "Microsoft.Resources/deployments",
+      "location": "[parameters('resourceGroupLocation')]",
+      "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
