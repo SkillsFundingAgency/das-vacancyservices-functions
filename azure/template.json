@@ -1,351 +1,351 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "environmentName": {
-      "type": "string",
-      "metadata": {
-        "description": "Short name of the environment. Used for the reference of the environment in table storage"
-      }
-    },
-    "resourceEnvironmentName": {
-      "type": "string",
-      "metadata": {
-        "description": "name of the environment used for naming of resources in azure."
-      }
-    },
-    "serviceName": {
-      "type": "string",
-      "metadata": {
-        "description": "Short name of the service. Used for the name of resources created"
-      }
-    },
-    "ipSecurityRestrictions": {
-      "type": "array",
-      "metadata": {
-        "description": "Allowed IP's"
-      },
-      "defaultValue": []
-    },
-    "loggingRedisConnectionString": {
-      "type": "securestring"
-    },
-    "configurationStorageConnectionString": {
-      "type": "securestring"
-    },
-    "appServicePlanSize": {
-      "type": "string",
-      "allowedValues": ["1", "2", "3"],
-      "metadata": {
-        "description": "The app service plan size"
-      },
-      "defaultValue": "1"
-    },
-    "appServicePlanInstances": {
-      "type": "int",
-      "metadata": {
-        "description": "Number of the app service plan instance"
-      },
-      "defaultValue": 2
-    },
-    "vacancyIndexSchedule": {
-      "type": "string"
-    },
-    "geoCodeSchedule": {
-      "type": "string"
-    },
-    "monitorSchedule": {
-      "type": "string"
-    },
-    "vacancyStatusProcessorSchedule": {
-      "type": "string"
-    },
-    "dailyMetricsSchedule": {
-      "type": "string"
-    },
-    "referenceDataSchedule": {
-      "type": "string"
-    },
-    "houseKeepingSchedule": {
-      "type": "string"
-    },
-    "savedSearchSchedule": {
-      "type": "string"
-    },
-    "dailyDigestSchedule": {
-      "type": "string"
-    },
-    "legacyDatabaseHousekeepingSchedule": {
-      "type": "string"
-    },
-    "recruitV1StorageConnectionString": {
-      "type": "securestring"
-    },
-    "functionsExtensionVersion": {
-      "type": "string",
-      "defaultValue": "~3"
-    },
-    "tags": {
-      "type": "object"
-    },
-    "resourceGroupLocation": {
-      "type": "string"
-    },
-    "sharedEnvVirtualNetworkName": {
-      "type": "string"
-    },
-    "subnetObject": {
-      "type": "object"
-    },
-    "subnetServiceEndpointList": {
-      "type": "array"
-    },
-    "subnetDelegations": {
-      "type": "array"
-    },
-    "sharedEnvResourceGroup": {
-      "type": "string"
-    }
-  },
-  "variables": {
-    "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
-    "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
-    "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
-    "appServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
-    "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
-    "storageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'), parameters('serviceName'), 'str'))]"
-  },
-  "resources": [
-    {
-      "type": "Microsoft.Resources/resourceGroups",
-      "apiVersion": "2020-06-01",
-      "name": "[variables('resourceGroupName')]",
-      "location": "[parameters('resourceGroupLocation')]",
-      "tags": "[parameters('tags')]",
-      "properties": {}
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-06-01",
-      "name": "worker-app-service-subnet",
-      "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "virtualNetworkName": {
-            "value": "[parameters('sharedEnvVirtualNetworkName')]"
-          },
-          "subnetName": {
-            "value": "[parameters('subnetObject').name]"
-          },
-          "subnetAddressPrefix": {
-            "value": "[parameters('subnetObject').addressSpace]"
-          },
-          "serviceEndpointList": {
-            "value": "[parameters('subnetServiceEndpointList')]"
-          },
-          "delegations": {
-            "value": "[parameters('subnetDelegations')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2020-06-01",
-      "name": "storage-account",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[variables('resourceGroupName')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('deploymentUrlBase'), 'storage-account-arm.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2020-06-01",
-      "name": "worker-app-service-plan",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[variables('resourceGroupName')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "appServicePlanName": {
-            "value": "[variables('appServicePlanName')]"
-          },
-          "aspSize": {
-            "value": "[parameters('appServicePlanSize')]"
-          },
-          "aspInstances": {
-            "value": "[parameters('appServicePlanInstances')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2020-06-01",
-      "name": "function-app-insights",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[variables('resourceGroupName')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "appInsightsName": {
-            "value": "[variables('functionAppName')]"
-          },
-          "attachedService": {
-            "value": "[variables('functionAppName')]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2020-06-01",
-      "name": "function-app",
-      "type": "Microsoft.Resources/deployments",
-      "resourceGroup": "[variables('resourceGroupName')]",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('deploymentUrlBase'),'function-app-v2.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "functionAppName": {
-            "value": "[variables('functionAppName')]"
-          },
-          "appServicePlanName": {
-            "value": "[variables('appServicePlanName')]"
-          },
-          "appServicePlanResourceGroup": {
-            "value": "[variables('resourceGroupName')]"
-          },
-          "subnetResourceId": {
-            "value": "[reference('worker-app-service-subnet').outputs.subnetResourceId.value]"
-          },
-          "ipSecurityRestrictions": {
-            "value": "[parameters('ipSecurityRestrictions')]"
-          },
-          "functionAppAppSettings": {
-            "value": {
-              "array": [
-                {
-                  "name": "AzureWebJobsStorage",
-                  "value": "[reference('storage-account').outputs.storageConnectionString.value]"
-                },
-                {
-                  "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                  "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
-                },
-                {
-                  "name": "FUNCTIONS_EXTENSION_VERSION",
-                  "value": "[parameters('functionsExtensionVersion')]"
-                },
-                {
-                  "name": "EnvironmentName",
-                  "value": "[toUpper(parameters('environmentName'))]"
-                },
-                {
-                  "name": "LoggingRedisConnectionString",
-                  "value": "[parameters('loggingRedisConnectionString')]"
-                },
-                {
-                  "name": "ConfigurationStorageConnectionString",
-                  "value": "[parameters('configurationStorageConnectionString')]"
-                },
-                {
-                  "name": "AppName",
-                  "value": "das-vacancyservices-functions"
-                },
-                {
-                  "name": "VacancyIndexSchedule",
-                  "value": "[parameters('vacancyIndexSchedule')]"
-                },
-                {
-                  "name": "GeoCodeSchedule",
-                  "value": "[parameters('geoCodeSchedule')]"
-                },
-                {
-                  "name": "MonitorSchedule",
-                  "value": "[parameters('monitorSchedule')]"
-                },
-                {
-                  "name": "VacancyStatusProcessorSchedule",
-                  "value": "[parameters('vacancyStatusProcessorSchedule')]"
-                },
-                {
-                  "name": "DailyMetricsSchedule",
-                  "value": "[parameters('dailyMetricsSchedule')]"
-                },
-                {
-                  "name": "ReferenceDataSchedule",
-                  "value": "[parameters('referenceDataSchedule')]"
-                },
-                {
-                  "name": "HouseKeepingSchedule",
-                  "value": "[parameters('houseKeepingSchedule')]"
-                },
-                {
-                  "name": "SavedSearchSchedule",
-                  "value": "[parameters('savedSearchSchedule')]"
-                },
-                {
-                  "name": "DailyDigestSchedule",
-                  "value": "[parameters('dailyDigestSchedule')]"
-                },
-                {
-                  "name": "LegacyDatabaseHousekeepingSchedule",
-                  "value": "[parameters('legacyDatabaseHousekeepingSchedule')]"
-                },
-                {
-                  "name": "FUNCTIONS_WORKER_RUNTIME",
-                  "value": "dotnet"
-                }
-              ]
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the environment. Used for the reference of the environment in table storage"
             }
-          },
-          "functionAppConnectionStrings": {
-            "value": {
-              "array": [
-                {
-                  "name": "RecruitV1StorageConnectionString",
-                  "connectionString": "[parameters('recruitV1StorageConnectionString')]",
-                  "type": "Custom"
-                }
-              ]
+        },
+        "resourceEnvironmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "name of the environment used for naming of resources in azure."
             }
-          }
+        },
+        "serviceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the service. Used for the name of resources created"
+            }
+        },
+        "ipSecurityRestrictions": {
+            "type": "array",
+            "metadata": {
+                "description": "Allowed IP's"
+            },
+            "defaultValue": []
+        },
+        "loggingRedisConnectionString": {
+            "type": "securestring"
+        },
+        "configurationStorageConnectionString": {
+            "type": "securestring"
+        },
+        "appServicePlanSize": {
+            "type": "string",
+            "allowedValues": [ "1", "2", "3" ],
+            "metadata": {
+                "description": "The app service plan size"
+            },
+            "defaultValue": "1"
+        },
+        "appServicePlanInstances": {
+            "type": "int",
+            "metadata": {
+                "description": "Number of the app service plan instance"
+            },
+            "defaultValue": 2
+        },
+        "vacancyIndexSchedule": {
+            "type": "string"
+        },
+        "geoCodeSchedule": {
+            "type": "string"
+        },
+        "monitorSchedule": {
+            "type": "string"
+        },
+        "vacancyStatusProcessorSchedule": {
+            "type": "string"
+        },
+        "dailyMetricsSchedule": {
+            "type": "string"
+        },
+        "referenceDataSchedule": {
+            "type": "string"
+        },
+        "houseKeepingSchedule": {
+            "type": "string"
+        },
+        "savedSearchSchedule": {
+            "type": "string"
+        },
+        "dailyDigestSchedule": {
+            "type": "string"
+        },
+        "legacyDatabaseHousekeepingSchedule": {
+            "type": "string"
+        },
+        "recruitV1StorageConnectionString": {
+            "type": "securestring"
+        },
+        "functionsExtensionVersion": {
+            "type": "string",
+            "defaultValue": "~3"
+        },
+        "tags": {
+            "type": "object"
+        },
+        "resourceGroupLocation": {
+            "type": "string"
+        },
+        "sharedEnvVirtualNetworkName": {
+            "type": "string"
+        },
+        "subnetObject": {
+            "type": "object"
+        },
+        "subnetServiceEndpointList": {
+            "type": "array"
+        },
+        "subnetDelegations": {
+            "type": "array"
+        },
+        "sharedEnvResourceGroup": {
+            "type": "string"
         }
-      },
-      "dependsOn": [
-        "function-app-insights",
-        "worker-app-service-plan",
-        "worker-app-service-subnet"
-      ]
+    },
+    "variables": {
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+        "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
+        "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
+        "appServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
+        "functionAppName": "[concat(variables('resourceNamePrefix'),'-fa')]",
+        "storageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'), parameters('serviceName'), 'str'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('resourceGroupName')]",
+            "location": "[parameters('resourceGroupLocation')]",
+            "tags": "[parameters('tags')]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "worker-app-service-subnet",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetObject').name]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[parameters('subnetObject').addressSpace]"
+                    },
+                    "serviceEndpointList": {
+                        "value": "[parameters('subnetServiceEndpointList')]"
+                    },
+                    "delegations": {
+                        "value": "[parameters('subnetDelegations')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "name": "storage-account",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'), 'storage-account-arm.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageAccountName": {
+                        "value": "[variables('storageAccountName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "name": "worker-app-service-plan",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('appServicePlanSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('appServicePlanInstances')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "name": "function-app-insights",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appInsightsName": {
+                        "value": "[variables('functionAppName')]"
+                    },
+                    "attachedService": {
+                        "value": "[variables('functionAppName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
+            "name": "function-app",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'function-app-v2.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "functionAppName": {
+                        "value": "[variables('functionAppName')]"
+                    },
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "appServicePlanResourceGroup": {
+                        "value": "[variables('resourceGroupName')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[reference('worker-app-service-subnet').outputs.subnetResourceId.value]"
+                    },
+                    "ipSecurityRestrictions": {
+                        "value": "[parameters('ipSecurityRestrictions')]"
+                    },
+                    "functionAppAppSettings": {
+                        "value": {
+                            "array": [
+                                {
+                                    "name": "AzureWebJobsStorage",
+                                    "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                                },
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                                    "value": "[parameters('functionsExtensionVersion')]"
+                                },
+                                {
+                                    "name": "EnvironmentName",
+                                    "value": "[toUpper(parameters('environmentName'))]"
+                                },
+                                {
+                                    "name": "LoggingRedisConnectionString",
+                                    "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigurationStorageConnectionString",
+                                    "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "AppName",
+                                    "value": "das-vacancyservices-functions"
+                                },
+                                {
+                                    "name": "VacancyIndexSchedule",
+                                    "value": "[parameters('vacancyIndexSchedule')]"
+                                },
+                                {
+                                    "name": "GeoCodeSchedule",
+                                    "value": "[parameters('geoCodeSchedule')]"
+                                },
+                                {
+                                    "name": "MonitorSchedule",
+                                    "value": "[parameters('monitorSchedule')]"
+                                },
+                                {
+                                    "name": "VacancyStatusProcessorSchedule",
+                                    "value": "[parameters('vacancyStatusProcessorSchedule')]"
+                                },
+                                {
+                                    "name": "DailyMetricsSchedule",
+                                    "value": "[parameters('dailyMetricsSchedule')]"
+                                },
+                                {
+                                    "name": "ReferenceDataSchedule",
+                                    "value": "[parameters('referenceDataSchedule')]"
+                                },
+                                {
+                                    "name": "HouseKeepingSchedule",
+                                    "value": "[parameters('houseKeepingSchedule')]"
+                                },
+                                {
+                                    "name": "SavedSearchSchedule",
+                                    "value": "[parameters('savedSearchSchedule')]"
+                                },
+                                {
+                                    "name": "DailyDigestSchedule",
+                                    "value": "[parameters('dailyDigestSchedule')]"
+                                },
+                                {
+                                    "name": "LegacyDatabaseHousekeepingSchedule",
+                                    "value": "[parameters('legacyDatabaseHousekeepingSchedule')]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                                    "value": "dotnet"
+                                }
+                            ]
+                        }
+                    },
+                    "functionAppConnectionStrings": {
+                        "value": {
+                            "array": [
+                                {
+                                    "name": "RecruitV1StorageConnectionString",
+                                    "connectionString": "[parameters('recruitV1StorageConnectionString')]",
+                                    "type": "Custom"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "dependsOn": [
+                "function-app-insights",
+                "worker-app-service-plan",
+                "worker-app-service-subnet"
+            ]
+        }
+    ],
+    "outputs": {
+        "FunctionAppName": {
+            "type": "string",
+            "value": "[variables('functionAppName')]"
+        }
     }
-  ],
-  "outputs": {
-    "FunctionAppName": {
-      "type": "string",
-      "value": "[variables('functionAppName')]"
-    }
-  }
 }
