@@ -127,7 +127,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "worker-app-service-subnet",
+            "name": "function-app-subnet",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "properties": {
                 "mode": "Incremental",
@@ -174,7 +174,7 @@
         },
         {
             "apiVersion": "2020-06-01",
-            "name": "worker-app-service-plan",
+            "name": "function-app-service-plan",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -239,7 +239,7 @@
                         "value": "[variables('resourceGroupName')]"
                     },
                     "subnetResourceId": {
-                        "value": "[reference('worker-app-service-subnet').outputs.subnetResourceId.value]"
+                        "value": "[reference('function-app-subnet').outputs.subnetResourceId.value]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('ipSecurityRestrictions')]"
@@ -337,8 +337,8 @@
             },
             "dependsOn": [
                 "function-app-insights",
-                "worker-app-service-plan",
-                "worker-app-service-subnet"
+                "function-app-service-plan",
+                "function-app-subnet"
             ]
         }
     ],
