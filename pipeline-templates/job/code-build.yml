@@ -4,6 +4,7 @@ jobs:
     name: DAS - Continuous Integration Agents
     demands: LATEST_DOTNET_VERSION -equals 3.1
   variables:
+    - group: BUILD Management Resources
     - group: Prod Management Resources
     - name: buildConfiguration
       value: release
