@@ -105,6 +105,10 @@
         },
         "sharedEnvResourceGroup": {
             "type": "string"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow('yyMMddHHmmss')]"
         }
     },
     "variables": {
@@ -127,7 +131,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "function-app-subnet",
+            "name": "[concat('function-app-subnet-', parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "properties": {
                 "mode": "Incremental",
@@ -156,7 +160,7 @@
         },
         {
             "apiVersion": "2020-06-01",
-            "name": "storage-account",
+            "name": "[concat('storage-account-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -177,7 +181,7 @@
         },
         {
             "apiVersion": "2020-06-01",
-            "name": "function-app-service-plan",
+            "name": "[concat('function-app-service-plan-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -201,7 +205,7 @@
         },
         {
             "apiVersion": "2020-06-01",
-            "name": "function-app-insights",
+            "name": "[concat('function-app-insights-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -222,7 +226,7 @@
         },
         {
             "apiVersion": "2020-06-01",
-            "name": "function-app",
+            "name": "[concat('function-app-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -242,7 +246,7 @@
                         "value": "[variables('resourceGroupName')]"
                     },
                     "subnetResourceId": {
-                        "value": "[reference('function-app-subnet').outputs.subnetResourceId.value]"
+                        "value": "[reference(concat('function-app-subnet-', parameters('utcValue'))).outputs.subnetResourceId.value]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('ipSecurityRestrictions')]"
@@ -252,11 +256,11 @@
                             "array": [
                                 {
                                     "name": "AzureWebJobsStorage",
-                                    "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                                    "value": "[reference(concat('storage-account-', parameters('utcValue'))).outputs.storageConnectionString.value]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat('function-app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -343,9 +347,9 @@
                 }
             },
             "dependsOn": [
-                "function-app-insights",
-                "function-app-service-plan",
-                "function-app-subnet"
+                "[concat('function-app-insights-', parameters('utcValue'))]",
+                "[concat('function-app-service-plan-', parameters('utcValue'))]",
+                "[concat('function-app-subnet-', parameters('utcValue'))]"
             ]
         }
     ],
