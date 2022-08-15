@@ -20,12 +20,8 @@
                 "description": "Short name of the service. Used for the name of resources created"
             }
         },
-        "ipSecurityRestrictions": {
-            "type": "array",
-            "metadata": {
-                "description": "Allowed IP's"
-            },
-            "defaultValue": []
+        "workerAccessRestrictions": {
+            "type": "array"
         },
         "loggingRedisConnectionString": {
             "type": "securestring"
@@ -249,7 +245,7 @@
                         "value": "[reference(concat('function-app-subnet-', parameters('utcValue'))).outputs.subnetResourceId.value]"
                     },
                     "ipSecurityRestrictions": {
-                        "value": "[parameters('ipSecurityRestrictions')]"
+                        "value": "[parameters('workerAccessRestrictions')]"
                     },
                     "functionAppAppSettings": {
                         "value": {
