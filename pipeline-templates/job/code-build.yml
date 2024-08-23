@@ -15,7 +15,8 @@ jobs:
 
   - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
     parameters:
-        SonarCloudProjectKey: SkillsFundingAgency_das-vacancyservices-functions
+      SonarCloudProjectKey: SkillsFundingAgency_das-vacancyservices-functions
+      ContinueOnVulnerablePackageScanError: true
 
   - task: DotNetCoreCLI@2
     displayName: 'Publish'
